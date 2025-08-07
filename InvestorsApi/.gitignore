@@ -1,0 +1,28 @@
+clau# Visual Studio files
+*.suo
+*.user
+.vs/
+
+# Build directories
+bin/
+obj/
+Debug/
+Release/
+
+# Compiled files
+*.exe
+*.dll
+*.pdb
+*.lib
+*.obj
+
+# NuGet packages
+packages/
+*.nupkg
+
+# Temporary files
+*.tmp
+*.log
+
+# Test results
+TestResults/
