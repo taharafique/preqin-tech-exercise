@@ -1,5 +1,6 @@
-﻿using InvestorsApi.Services;
+﻿using InvestorsApi.Context;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace InvestorsApi.Controllers
 {
@@ -7,27 +8,42 @@ namespace InvestorsApi.Controllers
     [Route("api/[controller]")]
     public class InvestorsController : ControllerBase
     {
-        private readonly IInvestorRepository _repository;
+        private readonly InvestorDbContext _investorContext;
 
-        public InvestorsController(IInvestorRepository repository)
+
+        public InvestorsController(InvestorDbContext investorContext)
         {
-            _repository = repository;
+            _investorContext = investorContext;
         }
 
         [HttpGet]
-        public ActionResult GetInvestors()
+        public async Task<ActionResult> GetInvestorsAsync()
         {
-            var investors = _repository.GetInvestors();
+            var investors = await _investorContext.Investors
+                    .Include(i => i.Commitments)
+                    .Select(i => new InvestorDto
+                    {
+                        Id = i.Id,
+                        Name = i.Name,
+                        Type = i.Type,
+                        Country = i.Country,
+                        DateAdded = i.DateAdded,
+                        LastUpdated = i.LastUpdated,
+                        TotalCommitments = i.Commitments.Sum(c => c.Amount)
+                    })
+                    .ToListAsync();
 
-            return Ok(investors);
+            var orderedInvestors = investors.OrderByDescending(i => i.TotalCommitments).ToList();
+
+            return Ok(orderedInvestors);
         }
 
-        [HttpGet("{id}")]
-        public ActionResult GetInvestor(int id)
-        {
-            var investors = _repository.GetInvestor(id);
+        // [HttpGet("{id}")]
+        // public ActionResult GetInvestor(int id)
+        // {
+        //     var investors = _repository.GetInvestor(id);
 
-            return Ok(investors);
-        }
+        //     return Ok(investors);
+        // }
     }
 }

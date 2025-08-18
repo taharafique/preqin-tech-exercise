@@ -1,5 +1,6 @@
+using InvestorsApi.Context;
 using InvestorsApi.DataAccess;
-using InvestorsApi.Services;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Services
-builder.Services.AddSingleton<IInvestorRepository, CsvDataReader>();
+
+builder.Services.AddDbContext<InvestorDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
@@ -24,5 +27,13 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.MapControllers();
+
+// Importing CSV data on startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<InvestorDbContext>();
+    dbContext.Database.Migrate();
+    CsvDataReader.ReadCsv(dbContext);
+}
 
 app.Run();
