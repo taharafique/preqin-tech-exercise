@@ -38,12 +38,48 @@ namespace InvestorsApi.Controllers
             return Ok(orderedInvestors);
         }
 
-        // [HttpGet("{id}")]
-        // public ActionResult GetInvestor(int id)
-        // {
-        //     var investors = _repository.GetInvestor(id);
+        [HttpGet("{id}")]
+        public async Task<ActionResult> GetInvestor(int id, [FromQuery] string assetClass = null)
+        {
+            var investor = await _investorContext.Investors
+                .Include(i => i.Commitments)
+                .Where(i => i.Id == id)
+                .FirstOrDefaultAsync();
 
-        //     return Ok(investors);
-        // }
+            if (investor == null)
+            {
+                return NotFound();
+            }
+
+            var commitments = investor.Commitments.AsQueryable();
+        
+            if (!string.IsNullOrEmpty(assetClass))
+            {
+                commitments = commitments.Where(c => c.AssetClass == assetClass);
+            }
+
+            var commitmentsList = commitments
+                .Select(c => new CommitmentDto
+                {
+                    Id = c.Id,
+                    AssetClass = c.AssetClass,
+                    Amount = c.Amount,
+                    Currency = c.Currency
+                })
+                .ToList();
+
+            var result = new InvestorDetailDto
+            {
+                Id = investor.Id,
+                Name = investor.Name,
+                Type = investor.Type,
+                Country = investor.Country,
+                DateAdded = investor.DateAdded,
+                LastUpdated = investor.LastUpdated,
+                Commitments = commitmentsList.OrderByDescending(c => c.Amount).ToList()
+            };
+
+            return Ok(result);
+        }
     }
 }
