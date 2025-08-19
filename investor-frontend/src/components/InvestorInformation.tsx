@@ -30,35 +30,17 @@ const InvestorInformation: React.FC = () => {
     fetchInvestorData();
   }, [id]);
 
-  useEffect(() => {
-    const fetchFilteredInvestor = async () => {
-      if (!id || !selectedAssetClass) 
-        return;
-      
-      try {
-        const data = await investorApi.getInvestor(parseInt(id), selectedAssetClass);
-        setInvestor(data);
-      } catch (err) {
-        console.error('Error fetching filtered commitments:', err);
-      }
-    };
-
-    if (selectedAssetClass) {
-      fetchFilteredInvestor();
-    }
-  }, [id, selectedAssetClass]);
-
   const formatCurrency = (amount: number) => {
     if (amount >= 1_000_000_000) {
-      return `${(amount / 1_000_000_000).toFixed(2)}B`;
+      return `${(amount / 1_000_000_000).toFixed(1)}B`;
     } else if (amount >= 1_000_000) {
-      return `${(amount / 1_000_000).toFixed(2)}M`;
+      return `${(amount / 1_000_000).toFixed(1)}M`;
     } else {
       return `${amount.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`;
     }
   };
 
-  // Calculate totals for each asset class
+  // Calculate totals for each asset class (all commitments)
   const assetClassTotals: { [key: string]: number } = {};
   investor?.commitments.forEach((commitment) => {
     assetClassTotals[commitment.assetClass] =
@@ -66,6 +48,11 @@ const InvestorInformation: React.FC = () => {
   });
 
   const totalCommitments = investor?.commitments?.reduce((sum, commitment) => sum + commitment.amount, 0) || 0;
+
+  // Filter commitments for display based on selected asset class
+  const displayedCommitments = selectedAssetClass
+    ? investor?.commitments.filter(c => c.assetClass === selectedAssetClass)
+    : investor?.commitments;
  
   if (!investor) {
     return <div>Loading investor information...</div>;
@@ -100,7 +87,7 @@ const InvestorInformation: React.FC = () => {
       </div>
 
       <div className="commitments-section">
-        {investor.commitments?.length === 0 ? (
+        {(!displayedCommitments || displayedCommitments.length === 0) ? (
           <div className="no-commitments">
             <p>No commitments found for the selected criteria.</p>
           </div>
@@ -115,7 +102,7 @@ const InvestorInformation: React.FC = () => {
               </tr>
             </thead>
             <tbody>
-              {investor.commitments?.map((commitment) => (
+              {displayedCommitments?.map((commitment) => (
                 <tr key={commitment.id}>
                   <td>{commitment.id}</td>
                   <td>{commitment.assetClass}</td>

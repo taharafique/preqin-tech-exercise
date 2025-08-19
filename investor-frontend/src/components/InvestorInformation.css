@@ -1,4 +1,10 @@
 
+.investor-detail-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .investor-detail-header {
   text-align: center;
   margin-bottom: 24px;
@@ -32,6 +38,8 @@
 
 .commitments-section {
   margin-top: 32px;
+  width: 80%;
+  min-width: 600px;
 }
 
 .commitments-header {
@@ -43,7 +51,7 @@
 
 .commitments-table {
   width: 100%;
-  min-width: 600px;
+  min-width: 80%;
   border-collapse: collapse;
   background: #fafafa;
 }
@@ -100,7 +108,5 @@
 }
 
 .asset-class-btn.selected {
-  background: #0078d4;
-  color: #fff;
-  border-color: #0078d4;
+  background: #e6f0ff;
 }
