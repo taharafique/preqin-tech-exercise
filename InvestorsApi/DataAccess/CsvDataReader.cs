@@ -1,7 +1,6 @@
 ﻿using CsvHelper;
 using InvestorsApi.Context;
 using InvestorsApi.Models;
-using InvestorsApi.Services;
 using System.Globalization;
 
 namespace InvestorsApi.DataAccess
@@ -23,13 +22,21 @@ namespace InvestorsApi.DataAccess
             {
                 if (!investors.ContainsKey(record.InvestorName))
                 {
+                    static string DateFormatter(string dateString)
+                    {
+                        var parsedDate = DateTime.Parse(dateString);
+                        var dateTimeString = parsedDate.ToString("MMM dd yyyy");
+
+                        return dateTimeString;
+                    }
+
                     var investor = new Investor
                     {
                         Name = record.InvestorName,
                         Type = record.InvestoryType,
                         Country = record.InvestorCountry,
-                        DateAdded = DateTime.Parse(record.InvestorDateAdded),
-                        LastUpdated = DateTime.Parse(record.InvestorLastUpdated),
+                        DateAdded = DateFormatter(record.InvestorDateAdded),
+                        LastUpdated = DateFormatter(record.InvestorLastUpdated),
                         Commitments = []
                     };
 

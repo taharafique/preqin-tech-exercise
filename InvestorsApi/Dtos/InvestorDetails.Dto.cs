@@ -8,9 +8,9 @@ public class InvestorDetailDto
 
     public string Country { get; set; } = string.Empty;
 
-    public DateTime DateAdded { get; set; }
+    public string DateAdded { get; set; }
 
-    public DateTime LastUpdated { get; set; }
-    
-    public List<CommitmentDto> Commitments { get; set; } = new List<CommitmentDto>();
+    public string LastUpdated { get; set; }
+
+    public List<CommitmentDto> Commitments { get; set; } = [];
 }

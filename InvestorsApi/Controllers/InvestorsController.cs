@@ -10,7 +10,6 @@ namespace InvestorsApi.Controllers
     {
         private readonly InvestorDbContext _investorContext;
 
-
         public InvestorsController(InvestorDbContext investorContext)
         {
             _investorContext = investorContext;
@@ -20,18 +19,18 @@ namespace InvestorsApi.Controllers
         public async Task<ActionResult> GetInvestorsAsync()
         {
             var investors = await _investorContext.Investors
-                    .Include(i => i.Commitments)
-                    .Select(i => new InvestorDto
-                    {
-                        Id = i.Id,
-                        Name = i.Name,
-                        Type = i.Type,
-                        Country = i.Country,
-                        DateAdded = i.DateAdded,
-                        LastUpdated = i.LastUpdated,
-                        TotalCommitments = i.Commitments.Sum(c => c.Amount)
-                    })
-                    .ToListAsync();
+                .Include(i => i.Commitments)
+                .Select(i => new InvestorDto
+                {
+                    Id = i.Id,
+                    Name = i.Name,
+                    Type = i.Type,
+                    Country = i.Country,
+                    DateAdded = i.DateAdded,
+                    LastUpdated = i.LastUpdated,
+                    TotalCommitments = i.Commitments.Sum(c => c.Amount)
+                })
+                .ToListAsync();
 
             var orderedInvestors = investors.OrderByDescending(i => i.TotalCommitments).ToList();
 
@@ -52,7 +51,7 @@ namespace InvestorsApi.Controllers
             }
 
             var commitments = investor.Commitments.AsQueryable();
-        
+
             if (!string.IsNullOrEmpty(assetClass))
             {
                 commitments = commitments.Where(c => c.AssetClass == assetClass);
