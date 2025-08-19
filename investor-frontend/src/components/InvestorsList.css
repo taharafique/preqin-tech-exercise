@@ -1,25 +1,19 @@
-.investors-list-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 32px;
-}
-
 .investors-list-title {
   margin-bottom: 24px;
   text-align: center;
 }
 
 .investors-table {
-  border-collapse: collapse;
+  width: 80%;
   min-width: 600px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  border-collapse: collapse;
+  background: #fafafa;
 }
 
-.investors-table-header, .investors-table-cell {
+.investors-table-header, 
+.investors-table-cell {
   border-bottom: 1px solid #ddd;
-  padding: 8px 16px;
+  padding: 8px 12px;
   text-align: center;
 }
 
@@ -29,5 +23,15 @@
 }
 
 .investors-table-row:nth-child(even) {
-  background: #fafafa;
+  background: #f9f9f9;
+}
+
+.investors-table-link {
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.investors-table-link:hover, 
+.investors-table-link:focus {
+  background: #e6f0ff;
+  outline: none;
 }

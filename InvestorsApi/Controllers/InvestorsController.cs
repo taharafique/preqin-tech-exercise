@@ -20,6 +20,7 @@ namespace InvestorsApi.Controllers
         {
             var investors = await _investorContext.Investors
                 .Include(i => i.Commitments)
+                .Distinct()
                 .Select(i => new InvestorDto
                 {
                     Id = i.Id,
@@ -32,9 +33,19 @@ namespace InvestorsApi.Controllers
                 })
                 .ToListAsync();
 
-            var orderedInvestors = investors.OrderByDescending(i => i.TotalCommitments).ToList();
+            return Ok(investors);
+        }
 
-            return Ok(orderedInvestors);
+        [HttpGet("assetClasses")]
+        public async Task<ActionResult> GetAssetClassesAsync()
+        {
+            var assetClasses = await _investorContext.Investors
+                .SelectMany(i => i.Commitments)
+                .Select(c => c.AssetClass)
+                .Distinct()
+                .ToListAsync();
+
+            return Ok(assetClasses);
         }
 
         [HttpGet("{id}")]

@@ -21,5 +21,10 @@ export const investorApi = {
     const params = assetClass ? { assetClass } : {};
     const response = await api.get(`/investors/${id}`, { params });
     return response.data;
+  },
+
+  getAssetClasses: async (): Promise<string[]> => {
+    const response = await api.get('/investors/assetClasses');
+    return response.data;
   }
 };

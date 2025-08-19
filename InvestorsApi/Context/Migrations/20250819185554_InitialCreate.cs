@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -20,8 +19,8 @@ namespace InvestorsApi.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Type = table.Column<string>(type: "TEXT", nullable: false),
                     Country = table.Column<string>(type: "TEXT", nullable: false),
-                    DateAdded = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastUpdated = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    DateAdded = table.Column<string>(type: "TEXT", nullable: false),
+                    LastUpdated = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -36,7 +35,7 @@ namespace InvestorsApi.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     InvestorId = table.Column<int>(type: "INTEGER", nullable: false),
                     AssetClass = table.Column<string>(type: "TEXT", nullable: false),
-                    Amount = table.Column<string>(type: "TEXT", nullable: false),
+                    Amount = table.Column<double>(type: "REAL", nullable: false),
                     Currency = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>

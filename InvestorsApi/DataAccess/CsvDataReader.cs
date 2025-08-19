@@ -22,21 +22,13 @@ namespace InvestorsApi.DataAccess
             {
                 if (!investors.ContainsKey(record.InvestorName))
                 {
-                    static string DateFormatter(string dateString)
-                    {
-                        var parsedDate = DateTime.Parse(dateString);
-                        var dateTimeString = parsedDate.ToString("MMM dd yyyy");
-
-                        return dateTimeString;
-                    }
-
                     var investor = new Investor
                     {
                         Name = record.InvestorName,
                         Type = record.InvestoryType,
                         Country = record.InvestorCountry,
-                        DateAdded = DateFormatter(record.InvestorDateAdded),
-                        LastUpdated = DateFormatter(record.InvestorLastUpdated),
+                        DateAdded = record.InvestorDateAdded,
+                        LastUpdated = record.InvestorLastUpdated,
                         Commitments = []
                     };
 
